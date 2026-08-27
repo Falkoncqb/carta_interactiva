@@ -19,3 +19,10 @@
 - [x] Mantener solo el botón de descubrimiento de carta bajo el título.
 - [x] Reencuadrar la fotografía de fondo para pantallas estrechas.
 - [x] Validar la cabecera resultante en una vista móvil.
+
+# Tareas — Hero móvil compacto
+
+- [x] Reducir la altura visible de la cabecera móvil.
+- [x] Subir y acercar el título y el botón de carta.
+- [x] Ajustar el recorte de la imagen de fondo para la nueva altura.
+- [x] Verificar el resultado en pantalla móvil.
