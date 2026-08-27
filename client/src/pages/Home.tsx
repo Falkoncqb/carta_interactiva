@@ -124,11 +124,11 @@ function PublicMenu({ products, navigate }: { products: Product[]; navigate: (pa
         </div>
       </header>
 
-      <section className="relative isolate min-h-[440px] overflow-hidden bg-[#211914] pb-8 pt-24 md:min-h-[720px] md:pb-20 md:pt-44">
-        <img src={asset.hero} alt="Cappuccino de avena y croissant recién horneado" className="absolute inset-0 -z-20 h-full w-full object-cover object-[75%_58%] md:object-center" />
+      <section className="relative isolate min-h-[395px] overflow-hidden bg-[#211914] pb-6 pt-20 md:min-h-[720px] md:pb-20 md:pt-44">
+        <img src={asset.hero} alt="Cappuccino de avena y croissant recién horneado" className="absolute inset-0 -z-20 h-full w-full object-cover object-[78%_60%] md:object-center" />
         <div className="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgba(30,22,18,0.28)_0%,rgba(30,22,18,0.42)_36%,rgba(30,22,18,0.92)_100%)] md:bg-[linear-gradient(90deg,rgba(30,22,18,0.95)_0%,rgba(30,22,18,0.84)_35%,rgba(30,22,18,0.22)_72%,rgba(30,22,18,0.05)_100%)]" />
-        <div className="relative mx-auto flex min-h-[290px] max-w-[1440px] flex-col justify-center px-5 md:min-h-[520px] md:justify-end md:px-10">
-          <div className="max-w-2xl -translate-y-5 md:translate-y-0">
+        <div className="relative mx-auto flex min-h-[245px] max-w-[1440px] flex-col justify-center px-5 md:min-h-[520px] md:justify-end md:px-10">
+          <div className="max-w-2xl -translate-y-6 md:translate-y-0">
             <div className="mb-5 hidden items-center gap-3 text-[10px] font-extrabold uppercase tracking-[0.24em] text-[#e5c2a3] md:flex"><span className="h-px w-8 bg-[#c96b47]" />Café de especialidad · hoy</div>
             <h1 className="font-display text-balance text-[2.7rem] leading-[0.94] text-[#fff8ec] md:text-8xl">Elige tu pausa.<br className="hidden md:block"/><em className="hidden font-normal text-[#e7a080] md:inline">La servimos con carácter.</em></h1>
             <p className="mt-7 hidden max-w-md text-base leading-7 text-[#eadbcc] md:block">Café con origen, recetas de temporada y panadería recién salida del horno. Hecho para acompañar tu momento.</p>

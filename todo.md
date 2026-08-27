@@ -26,3 +26,8 @@
 - [x] Subir y acercar el título y el botón de carta.
 - [x] Ajustar el recorte de la imagen de fondo para la nueva altura.
 - [x] Verificar el resultado en pantalla móvil.
+
+# Tareas — Ajuste adicional del hero móvil
+
+- [x] Reducir nuevamente la altura y el espacio vertical de la cabecera.
+- [x] Confirmar que título y botón conservan legibilidad.
