@@ -5,3 +5,10 @@
 - [x] Validar usuario y clave en el frontend, mostrando mensajes de error claros.
 - [x] Bloquear el panel administrativo si no hay sesión activa e incorporar cierre de sesión.
 - [x] Verificar los flujos de acceso y guardar un nuevo punto de control.
+
+# Tareas — Carta vertical de productos
+
+- [x] Sustituir las tarjetas visuales por una lista vertical de solo texto.
+- [x] Mostrar precio y características bajo el nombre de cada producto.
+- [x] Aplicar una superficie café opaca que mantenga alto contraste de lectura.
+- [x] Revisar el comportamiento de categorías, escritorio y móvil.

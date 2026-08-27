@@ -74,3 +74,4 @@ Un **arco de vapor angular** que, en negativo, sugiere simultáneamente una nube
 - En la administración, **Tostado 47** identifica las acciones principales y los gestos de marca. El verde salvia queda reservado para estados, filtros activos y señales de frescura.
 - Cada estado de acceso, vacío o error utiliza el mismo sistema editorial: papel marfil, texto espresso, acción en Tostado 47 y una voz concreta, cálida y precisa.
 - El símbolo de vapor/nube/taza y la regla vertical de tostado reaparecen en accesos, encabezados, separadores y controles activos para que la identidad no dependa solo del logotipo.
+- En la carta pública, las categorías siempre revelan una única lista vertical de solo texto: numeración, nombre, precio, descripción y etiquetas de características. Las imágenes quedan fuera del bloque de productos para privilegiar lectura y velocidad de decisión en escritorio y móvil.

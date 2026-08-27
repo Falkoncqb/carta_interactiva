@@ -56,8 +56,8 @@ function Logo({ light = false }: { light?: boolean }) {
     <div className="flex items-center gap-2.5">
       <img src={asset.mark} alt="" className="h-10 w-10 object-contain" />
       <div className="leading-none">
-        <span className={`font-display block text-[1.45rem] tracking-tight ${light ? "text-[#fff9ed]" : "text-[#211914]"}`}>Café Nube</span>
-        <span className={`block pt-1 text-[8px] font-extrabold uppercase tracking-[0.24em] ${light ? "text-[#dfc3a5]" : "text-[#a45839]"}`}>Tostado editorial</span>
+        <span className={`font-display block text-[1.45rem] tracking-[-0.04em] ${light ? "text-[#fff9ed]" : "text-[#211914]"}`}>Café <em className="font-normal text-[#d9815d]">Nube</em></span>
+        <span className={`mt-1 block border-t pt-1 text-[8px] font-extrabold uppercase tracking-[0.24em] ${light ? "border-[#d9815d]/55 text-[#dfc3a5]" : "border-[#b35332]/55 text-[#a45839]"}`}>Tostado editorial</span>
       </div>
     </div>
   );
@@ -106,10 +106,13 @@ function PublicCard({ product, onOpen }: { product: Product; onOpen: (product: P
   );
 }
 
+function TextMenuRow({ product, index }: { product: Product; index: number }) {
+  return <li className="group relative grid gap-4 border-b border-[#f4dfc8]/18 py-6 last:border-b-0 sm:grid-cols-[58px_1fr_auto] sm:gap-6 sm:py-7"><span className="font-display text-3xl leading-none text-[#c98664]">{String(index + 1).padStart(2, "0")}</span><div className="min-w-0"><div className="flex flex-wrap items-baseline justify-between gap-x-5 gap-y-2 sm:hidden"><h3 className="font-display text-2xl text-[#fff8ed]">{product.name}</h3><span className="font-display text-2xl text-[#e6a07c]">{priceFormatter.format(product.price)}</span></div><h3 className="hidden font-display text-3xl text-[#fff8ed] sm:block">{product.name}</h3><p className="mt-2 max-w-2xl text-sm leading-6 text-[#d9c2af]">{product.description}</p><div className="mt-4 flex flex-wrap gap-2">{product.tags.map((tag) => <span key={tag} className="rounded-full border border-[#f1d9c2]/20 bg-[#fff8ed]/8 px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-[0.11em] text-[#f3dfcd]">{tag}</span>)}</div></div><div className="hidden min-w-[110px] justify-end sm:flex"><span className="font-display text-3xl text-[#e6a07c] transition group-hover:-translate-y-0.5">{priceFormatter.format(product.price)}</span></div></li>;
+}
+
 function PublicMenu({ products, navigate }: { products: Product[]; navigate: (path: string) => void }) {
   const [activeCategory, setActiveCategory] = useState<Category | "Todo">("Todo");
   const [query, setQuery] = useState("");
-  const [selected, setSelected] = useState<Product | null>(null);
   const menuProducts = useMemo(() => products.filter((p) => p.available && (activeCategory === "Todo" || p.category === activeCategory) && `${p.name} ${p.description} ${p.tags.join(" ")}`.toLowerCase().includes(query.toLowerCase())), [products, activeCategory, query]);
 
   return (
@@ -140,11 +143,11 @@ function PublicMenu({ products, navigate }: { products: Product[]; navigate: (pa
 
       <main id="carta" className="relative mx-auto max-w-[1440px] px-5 py-16 md:px-10 md:py-24">
         <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-end">
-          <div className="max-w-2xl">
+          <div className="max-w-2xl lg:translate-x-8">
             <p className="steam-curve text-[10px] font-extrabold uppercase tracking-[0.22em] text-[#a65032]">La carta</p>
             <h2 className="mt-4 font-display text-5xl leading-[0.95] text-[#251b15] md:text-6xl">Preparado para <em className="font-normal text-[#a65032]">quedarse</em> un rato.</h2>
           </div>
-          <label className="flex h-12 w-full items-center gap-3 rounded-2xl border border-[#dfcdb9] bg-[#fffaf2] px-4 text-[#826b5a] lg:w-80"><Search className="h-4 w-4" /><input value={query} onChange={(event) => setQuery(event.target.value)} aria-label="Buscar en la carta" placeholder="Busca una bebida o algo dulce" className="w-full bg-transparent text-sm outline-none placeholder:text-[#a68d7a]" /></label>
+          <label className="flex h-12 w-full items-center gap-3 rounded-2xl border border-[#dfcdb9] bg-[#fffaf2] px-4 text-[#826b5a] lg:w-80 lg:-translate-y-4"><Search className="h-4 w-4" /><input value={query} onChange={(event) => setQuery(event.target.value)} aria-label="Buscar en la carta" placeholder="Busca una bebida o algo dulce" className="w-full bg-transparent text-sm outline-none placeholder:text-[#a68d7a]" /></label>
         </div>
 
         <div className="mt-10 flex items-center gap-2 overflow-x-auto pb-1">
@@ -152,9 +155,18 @@ function PublicMenu({ products, navigate }: { products: Product[]; navigate: (pa
           {categories.map((category) => <button key={category} onClick={() => setActiveCategory(category)} className={`shrink-0 rounded-full px-4 py-2 text-xs font-extrabold uppercase tracking-[0.11em] transition ${activeCategory === category ? "bg-[#5d895a] text-[#fff9ed] shadow-lg shadow-[#5d895a]/20" : "bg-[#eee0cd] text-[#6d5647] hover:bg-[#e5d1ba]"}`}>{category}</button>)}
         </div>
 
-        <div className="mt-10 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">{menuProducts.map((product) => <PublicCard key={product.id} product={product} onOpen={setSelected} />)}
-          {menuProducts.length > 3 && <aside className="relative overflow-hidden rounded-[1.25rem] border border-[#d9c1a9] bg-[#e8d7c1] p-7 paper-grain sm:col-span-2 xl:col-span-3"><span className="absolute bottom-0 left-8 top-0 w-px bg-[#b35332]" /><div className="relative grid gap-6 sm:grid-cols-[0.8fr_1.2fr] sm:items-end"><div><p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-[#a65032]">Regla de tostado · 02</p><p className="mt-3 font-display text-5xl leading-none text-[#33231a]">Que tenga<br/><em className="font-normal">origen.</em></p></div><div className="border-l border-[#b99d84] pl-5 text-sm leading-6 text-[#694f3e]"><p>Trabajamos el café como una historia corta: origen claro, molienda precisa y una receta que deja aparecer sus notas.</p><p className="mt-4 text-[10px] font-extrabold uppercase tracking-[0.16em] text-[#9a4b2e]">Cuerpo · dulzor · final</p></div></div></aside>}
-        </div>
+        <section className="relative mt-12 overflow-hidden border-y border-[#5e4131] bg-[#2a1c15] shadow-[0_24px_54px_rgba(54,30,16,0.2)]">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_92%_0%,rgba(179,83,50,0.25),transparent_29%),linear-gradient(145deg,rgba(79,48,28,0.35),transparent_45%)]" />
+          <span className="absolute bottom-0 left-8 top-0 w-px bg-[#c66b47] sm:left-[9.5rem]" />
+          <div aria-hidden="true" className="absolute right-12 top-5 hidden h-28 w-48 opacity-70 md:block"><span className="absolute right-1 top-0 h-20 w-28 rounded-[100%_0_0_0] border-l border-t border-[#e19a78]/55" /><span className="absolute right-8 top-9 h-16 w-24 rounded-[100%_0_0_0] border-l border-t border-[#e19a78]/35" /><span className="absolute right-[4.5rem] top-[3.7rem] h-14 w-20 rounded-[100%_0_0_0] border-l border-t border-[#e19a78]/25" /></div>
+          <div className="relative px-6 py-8 sm:px-10 sm:py-12 lg:px-16">
+            <div className="flex flex-col justify-between gap-5 border-b border-[#f4dfc8]/20 pb-6 sm:flex-row sm:items-end">
+              <div><p className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-[#e8a27d]">Selección de hoy · regla 02</p><h3 className="mt-2 font-display text-3xl text-[#fff8ed]">La carta, de arriba abajo.</h3></div>
+              <p className="max-w-xs border-l border-[#c66b47]/65 pl-4 text-sm leading-6 text-[#d9c2af]">Precio, receta y características para decidir sin perder el hilo.</p>
+            </div>
+            <ol className="mt-1">{menuProducts.map((product, index) => <TextMenuRow key={product.id} product={product} index={index} />)}</ol>
+          </div>
+        </section>
         {menuProducts.length === 0 && <div className="mt-10 rounded-[1.5rem] border border-dashed border-[#ceb69d] bg-[#fffaf2] px-6 py-14 text-center"><Search className="mx-auto h-7 w-7 text-[#a65032]" /><h3 className="mt-4 font-display text-2xl">No encontramos esa pausa.</h3><p className="mt-2 text-sm text-[#765f50]">Prueba con otra búsqueda o explora todas las categorías.</p><button onClick={() => { setQuery(""); setActiveCategory("Todo"); }} className="mt-5 text-xs font-extrabold uppercase tracking-[0.12em] text-[#a65032]">Ver carta completa</button></div>}
       </main>
 
@@ -167,7 +179,6 @@ function PublicMenu({ products, navigate }: { products: Product[]; navigate: (pa
 
       <footer className="bg-[#231a15] px-5 py-10 text-[#f3e5d5] md:px-10"><div className="mx-auto flex max-w-[1440px] flex-col justify-between gap-8 sm:flex-row sm:items-end"><Logo light /><div className="text-sm leading-6 text-[#c9aa91]"><p className="font-bold text-[#f3e5d5]">Café Nube · Plaza del Barrio</p><p>Abierto todos los días, 08:00 — 19:30</p></div><button onClick={() => navigate("/login")} className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-[0.14em] text-[#e7a080] hover:text-white">Gestionar carta <ChevronRight className="h-4 w-4" /></button></div></footer>
 
-      {selected && <ProductDetail product={selected} onClose={() => setSelected(null)} />}
     </div>
   );
 }
