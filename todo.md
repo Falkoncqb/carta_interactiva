@@ -12,3 +12,10 @@
 - [x] Mostrar precio y características bajo el nombre de cada producto.
 - [x] Aplicar una superficie café opaca que mantenga alto contraste de lectura.
 - [x] Revisar el comportamiento de categorías, escritorio y móvil.
+
+# Tareas — Cabecera móvil
+
+- [x] Simplificar el titular y ocultar elementos secundarios en celular.
+- [x] Mantener solo el botón de descubrimiento de carta bajo el título.
+- [x] Reencuadrar la fotografía de fondo para pantallas estrechas.
+- [x] Validar la cabecera resultante en una vista móvil.

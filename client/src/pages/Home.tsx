@@ -120,22 +120,21 @@ function PublicMenu({ products, navigate }: { products: Product[]; navigate: (pa
       <header className="absolute inset-x-0 top-0 z-20">
         <div className="mx-auto flex max-w-[1440px] items-center justify-between px-5 py-5 md:px-10 md:py-7">
           <Logo light />
-          <button onClick={() => navigate("/login")} className="hidden items-center gap-2 rounded-full border border-[#fff9ed]/30 bg-[#fff9ed]/10 px-4 py-2 text-xs font-extrabold uppercase tracking-[0.12em] text-[#fff9ed] backdrop-blur-sm transition hover:bg-[#fff9ed] hover:text-[#251b15] sm:flex"><Settings2 className="h-3.5 w-3.5" />Administrar</button>
-          <button onClick={() => navigate("/login")} aria-label="Abrir acceso de administración" className="rounded-full border border-[#fff9ed]/30 bg-[#fff9ed]/10 p-2.5 text-[#fff9ed] backdrop-blur-sm sm:hidden"><Settings2 className="h-4 w-4" /></button>
+          <button onClick={() => navigate("/login")} className="hidden items-center gap-2 rounded-full border border-[#fff9ed]/30 bg-[#fff9ed]/10 px-4 py-2 text-xs font-extrabold uppercase tracking-[0.12em] text-[#fff9ed] backdrop-blur-sm transition hover:bg-[#fff9ed] hover:text-[#251b15] md:flex"><Settings2 className="h-3.5 w-3.5" />Administrar</button>
         </div>
       </header>
 
-      <section className="relative isolate min-h-[650px] overflow-hidden bg-[#211914] pb-16 pt-36 md:min-h-[720px] md:pb-20 md:pt-44">
-        <img src={asset.hero} alt="Cappuccino de avena y croissant recién horneado" className="absolute inset-0 -z-20 h-full w-full object-cover object-center" />
-        <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(30,22,18,0.95)_0%,rgba(30,22,18,0.84)_35%,rgba(30,22,18,0.22)_72%,rgba(30,22,18,0.05)_100%)]" />
-        <div className="relative mx-auto flex min-h-[470px] max-w-[1440px] flex-col justify-end px-5 md:min-h-[520px] md:px-10">
+      <section className="relative isolate min-h-[560px] overflow-hidden bg-[#211914] pb-12 pt-28 md:min-h-[720px] md:pb-20 md:pt-44">
+        <img src={asset.hero} alt="Cappuccino de avena y croissant recién horneado" className="absolute inset-0 -z-20 h-full w-full object-cover object-[68%_center] md:object-center" />
+        <div className="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgba(30,22,18,0.28)_0%,rgba(30,22,18,0.42)_36%,rgba(30,22,18,0.92)_100%)] md:bg-[linear-gradient(90deg,rgba(30,22,18,0.95)_0%,rgba(30,22,18,0.84)_35%,rgba(30,22,18,0.22)_72%,rgba(30,22,18,0.05)_100%)]" />
+        <div className="relative mx-auto flex min-h-[420px] max-w-[1440px] flex-col justify-end px-5 md:min-h-[520px] md:px-10">
           <div className="max-w-2xl">
-            <div className="mb-5 flex items-center gap-3 text-[10px] font-extrabold uppercase tracking-[0.24em] text-[#e5c2a3]"><span className="h-px w-8 bg-[#c96b47]" />Café de especialidad · hoy</div>
-            <h1 className="font-display text-balance text-5xl leading-[0.94] text-[#fff8ec] sm:text-6xl md:text-8xl">Elige tu pausa.<br/><em className="font-normal text-[#e7a080]">La servimos con carácter.</em></h1>
-            <p className="mt-7 max-w-md text-base leading-7 text-[#eadbcc]">Café con origen, recetas de temporada y panadería recién salida del horno. Hecho para acompañar tu momento.</p>
-            <div className="mt-9 flex flex-wrap gap-3">
-              <button onClick={() => document.getElementById("carta")?.scrollIntoView({ behavior: "smooth" })} className="inline-flex items-center gap-2 rounded-full bg-[#f5e8d8] px-5 py-3 text-xs font-extrabold uppercase tracking-[0.13em] text-[#2d2018] transition hover:bg-white active:scale-[0.97]">Descubrir la carta <ArrowDownLine /></button>
-              <span className="inline-flex items-center px-3 text-xs font-semibold text-[#f1d4c0]">Abierto hoy · 08:00 — 19:30</span>
+            <div className="mb-5 hidden items-center gap-3 text-[10px] font-extrabold uppercase tracking-[0.24em] text-[#e5c2a3] md:flex"><span className="h-px w-8 bg-[#c96b47]" />Café de especialidad · hoy</div>
+            <h1 className="font-display text-balance text-[2.7rem] leading-[0.94] text-[#fff8ec] md:text-8xl">Elige tu pausa.<br className="hidden md:block"/><em className="hidden font-normal text-[#e7a080] md:inline">La servimos con carácter.</em></h1>
+            <p className="mt-7 hidden max-w-md text-base leading-7 text-[#eadbcc] md:block">Café con origen, recetas de temporada y panadería recién salida del horno. Hecho para acompañar tu momento.</p>
+            <div className="mt-8 flex flex-wrap gap-3 md:mt-9">
+              <button onClick={() => document.getElementById("carta")?.scrollIntoView({ behavior: "smooth" })} className="inline-flex items-center gap-2 rounded-full bg-[#f5e8d8] px-5 py-3 text-xs font-extrabold uppercase tracking-[0.13em] text-[#2d2018] transition hover:bg-white active:scale-[0.97]">Descubrir la carta <span className="hidden md:inline"><ArrowDownLine /></span></button>
+              <span className="hidden items-center px-3 text-xs font-semibold text-[#f1d4c0] md:inline-flex">Abierto hoy · 08:00 — 19:30</span>
             </div>
           </div>
         </div>
