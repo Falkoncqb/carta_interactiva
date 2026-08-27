@@ -72,3 +72,5 @@ Un **arco de vapor angular** que, en negativo, sugiere simultáneamente una nube
 - La carta pública evita una retícula uniforme: cada recorrido presenta un bloque protagonista, productos de escala desigual, columnas desfasadas y una pausa editorial con la curva de vapor o la regla de tostado.
 - La fotografía gastronómica cálida domina los productos destacados; los pictogramas terracota se reservan para opciones secundarias y funcionan como apoyo de composición, nunca como un reemplazo genérico de la imagen.
 - En la administración, **Tostado 47** identifica las acciones principales y los gestos de marca. El verde salvia queda reservado para estados, filtros activos y señales de frescura.
+- Cada estado de acceso, vacío o error utiliza el mismo sistema editorial: papel marfil, texto espresso, acción en Tostado 47 y una voz concreta, cálida y precisa.
+- El símbolo de vapor/nube/taza y la regla vertical de tostado reaparecen en accesos, encabezados, separadores y controles activos para que la identidad no dependa solo del logotipo.

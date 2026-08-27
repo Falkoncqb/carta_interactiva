@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import {
   ArrowLeft, ArrowRight, Check, ChevronRight, CircleGauge, Coffee, Cookie,
   CupSoda, Edit3, Eye, Filter, Leaf, Menu, MoreHorizontal, PackagePlus,
-  Plus, Search, Settings2, Sparkles, Trash2, X, Zap
+  LockKeyhole, LogOut, Search, Settings2, ShieldCheck, Sparkles, Trash2, UserRound, X, Zap
 } from "lucide-react";
 
 type Category = "Café" | "Fríos" | "Matcha" | "Panadería";
@@ -44,6 +44,7 @@ const seedProducts: Product[] = [
 
 const priceFormatter = new Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP", maximumFractionDigits: 0 });
 const newProduct = (): Product => ({ id: crypto.randomUUID(), name: "", category: "Café", price: 0, description: "", tags: [], available: true });
+const ADMIN_SESSION_KEY = "cafe-nube-admin-session";
 
 function ProductGlyph({ category, className = "" }: { category: Category; className?: string }) {
   const Icon = category === "Panadería" ? Cookie : category === "Matcha" ? Leaf : category === "Fríos" ? CupSoda : Coffee;
@@ -116,8 +117,8 @@ function PublicMenu({ products, navigate }: { products: Product[]; navigate: (pa
       <header className="absolute inset-x-0 top-0 z-20">
         <div className="mx-auto flex max-w-[1440px] items-center justify-between px-5 py-5 md:px-10 md:py-7">
           <Logo light />
-          <button onClick={() => navigate("/admin")} className="hidden items-center gap-2 rounded-full border border-[#fff9ed]/30 bg-[#fff9ed]/10 px-4 py-2 text-xs font-extrabold uppercase tracking-[0.12em] text-[#fff9ed] backdrop-blur-sm transition hover:bg-[#fff9ed] hover:text-[#251b15] sm:flex"><Settings2 className="h-3.5 w-3.5" />Administrar</button>
-          <button onClick={() => navigate("/admin")} aria-label="Abrir administración" className="rounded-full border border-[#fff9ed]/30 bg-[#fff9ed]/10 p-2.5 text-[#fff9ed] backdrop-blur-sm sm:hidden"><Settings2 className="h-4 w-4" /></button>
+          <button onClick={() => navigate("/login")} className="hidden items-center gap-2 rounded-full border border-[#fff9ed]/30 bg-[#fff9ed]/10 px-4 py-2 text-xs font-extrabold uppercase tracking-[0.12em] text-[#fff9ed] backdrop-blur-sm transition hover:bg-[#fff9ed] hover:text-[#251b15] sm:flex"><Settings2 className="h-3.5 w-3.5" />Administrar</button>
+          <button onClick={() => navigate("/login")} aria-label="Abrir acceso de administración" className="rounded-full border border-[#fff9ed]/30 bg-[#fff9ed]/10 p-2.5 text-[#fff9ed] backdrop-blur-sm sm:hidden"><Settings2 className="h-4 w-4" /></button>
         </div>
       </header>
 
@@ -164,7 +165,7 @@ function PublicMenu({ products, navigate }: { products: Product[]; navigate: (pa
         </div>
       </section>
 
-      <footer className="bg-[#231a15] px-5 py-10 text-[#f3e5d5] md:px-10"><div className="mx-auto flex max-w-[1440px] flex-col justify-between gap-8 sm:flex-row sm:items-end"><Logo light /><div className="text-sm leading-6 text-[#c9aa91]"><p className="font-bold text-[#f3e5d5]">Café Nube · Plaza del Barrio</p><p>Abierto todos los días, 08:00 — 19:30</p></div><button onClick={() => navigate("/admin")} className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-[0.14em] text-[#e7a080] hover:text-white">Gestionar carta <ChevronRight className="h-4 w-4" /></button></div></footer>
+      <footer className="bg-[#231a15] px-5 py-10 text-[#f3e5d5] md:px-10"><div className="mx-auto flex max-w-[1440px] flex-col justify-between gap-8 sm:flex-row sm:items-end"><Logo light /><div className="text-sm leading-6 text-[#c9aa91]"><p className="font-bold text-[#f3e5d5]">Café Nube · Plaza del Barrio</p><p>Abierto todos los días, 08:00 — 19:30</p></div><button onClick={() => navigate("/login")} className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-[0.14em] text-[#e7a080] hover:text-white">Gestionar carta <ChevronRight className="h-4 w-4" /></button></div></footer>
 
       {selected && <ProductDetail product={selected} onClose={() => setSelected(null)} />}
     </div>
@@ -181,7 +182,39 @@ function ProductDetail({ product, onClose }: { product: Product; onClose: () => 
   return <div role="dialog" aria-modal="true" aria-label={`Detalle de ${product.name}`} className="fixed inset-0 z-50 flex items-end bg-[#211914]/65 p-3 backdrop-blur-sm md:items-center md:justify-center"><div className="relative w-full max-w-2xl overflow-hidden rounded-[1.75rem] bg-[#fffaf2] shadow-2xl md:grid md:grid-cols-2"><button onClick={onClose} className="absolute right-4 top-4 z-10 rounded-full bg-[#fffaf2]/90 p-2 text-[#38261b] shadow-sm hover:bg-white" aria-label="Cerrar detalle"><X className="h-5 w-5" /></button><div className="h-52 md:h-full"><ProductImage product={product} /></div><div className="p-7 md:p-9"><Pill kind="terracotta">{product.category}</Pill><h2 className="mt-4 font-display text-4xl text-[#271b14]">{product.name}</h2><p className="mt-3 text-sm leading-6 text-[#725f51]">{product.description}</p><p className="mt-7 font-display text-3xl text-[#a65032]">{priceFormatter.format(product.price)}</p><div className="mt-6 flex flex-wrap gap-2">{product.tags.map((tag) => <Pill key={tag}>{tag}</Pill>)}</div><div className="mt-8 border-t border-[#ead8c5] pt-5 text-xs leading-5 text-[#826b5a]">Consulta en barra por disponibilidad y alternativas de leche.</div></div></div></div>;
 }
 
-function AdminMenu({ products, setProducts, navigate }: { products: Product[]; setProducts: React.Dispatch<React.SetStateAction<Product[]>>; navigate: (path: string) => void }) {
+function AdminLogin({ navigate, onAuthenticated }: { navigate: (path: string) => void; onAuthenticated: () => void }) {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
+
+  const submit = (event: React.FormEvent) => {
+    event.preventDefault();
+    if (username.trim().toLocaleLowerCase("es-CL") === "cafetería" && password === "cafeteria2026") {
+      localStorage.setItem(ADMIN_SESSION_KEY, "active");
+      setError("");
+      onAuthenticated();
+      toast.success("Acceso confirmado. La carta te espera.");
+      navigate("/admin");
+      return;
+    }
+    setError("Revisa el usuario y la contraseña para continuar.");
+    setPassword("");
+  };
+
+  return <div className="relative min-h-screen overflow-hidden bg-[#211914] text-[#fff8ed]">
+    <img src={asset.hero} alt="" className="absolute inset-0 h-full w-full object-cover opacity-40" />
+    <div className="absolute inset-0 bg-[linear-gradient(112deg,rgba(27,19,15,0.97)_0%,rgba(30,21,17,0.88)_43%,rgba(30,21,17,0.45)_100%)]" />
+    <span className="absolute -right-32 -top-24 h-[28rem] w-[28rem] rounded-full border border-[#dca17d]/25" />
+    <span className="absolute -right-2 top-8 h-[22rem] w-[22rem] rounded-full border border-[#dca17d]/15" />
+    <div className="relative mx-auto grid min-h-screen max-w-[1440px] items-center gap-12 px-5 py-8 md:px-10 lg:grid-cols-[1fr_0.85fr] lg:gap-24">
+      <div className="hidden max-w-xl lg:block"><Logo light /><p className="mt-28 text-[10px] font-extrabold uppercase tracking-[0.22em] text-[#dca17d]">Espacio de operación</p><h1 className="mt-5 font-display text-7xl leading-[0.92]">Detrás de una<br/><em className="font-normal text-[#e5a17e]">buena taza,</em><br/>hay criterio.</h1><p className="mt-7 max-w-sm text-base leading-7 text-[#e4c8b2]">Administra tu carta, ajusta la disponibilidad y conserva el ritmo de tu barra.</p><div className="mt-12 flex items-center gap-3 text-xs text-[#d6b29a]"><span className="h-px w-10 bg-[#b35332]" />Café Nube · operaciones internas</div></div>
+      <section className="w-full max-w-md justify-self-center lg:justify-self-end"><div className="mb-8 lg:hidden"><Logo light /></div><div className="relative overflow-hidden rounded-[1.75rem] border border-[#f9e8d6]/15 bg-[#fffaf2] p-6 text-[#2a1e16] shadow-[0_30px_80px_rgba(0,0,0,0.32)] paper-grain sm:p-9"><span className="absolute bottom-0 left-7 top-0 w-px bg-[#b35332]" /><span className="absolute right-0 top-0 h-24 w-24 rounded-bl-[5rem] bg-[#f3ded0]" /><span className="absolute right-12 top-10 h-7 w-16 rounded-[100%_0_0_0] border-l-2 border-t-2 border-[#b35332]/45" /><div className="relative pl-4"><div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#f3ddd2] text-[#9e4a2e]"><LockKeyhole className="h-5 w-5" /></div><p className="mt-6 text-[10px] font-extrabold uppercase tracking-[0.18em] text-[#a65032]">Acceso administrativo · regla 01</p><h2 className="mt-2 font-display text-4xl">Vuelve a la barra.</h2><p className="mt-3 text-sm leading-6 text-[#775f4f]">Ingresa tus credenciales para cuidar lo que aparece en la carta.</p></div><form onSubmit={submit} className="relative mt-8 space-y-5 pl-4"><label className="block"><span className="mb-2 block text-[10px] font-extrabold uppercase tracking-[0.12em] text-[#806758]">Usuario</span><span className="flex items-center gap-3 rounded-xl border border-[#dfcbb6] bg-[#fffdf9] px-4 py-3 transition focus-within:border-[#b35332] focus-within:ring-3 focus-within:ring-[#b35332]/15"><UserRound className="h-4 w-4 text-[#a65032]" /><input value={username} onChange={(event) => { setUsername(event.target.value); setError(""); }} autoComplete="username" autoCapitalize="none" placeholder="Tu usuario" className="w-full bg-transparent text-sm outline-none placeholder:text-[#ad9581]" /></span></label><label className="block"><span className="mb-2 block text-[10px] font-extrabold uppercase tracking-[0.12em] text-[#806758]">Contraseña</span><span className="flex items-center gap-3 rounded-xl border border-[#dfcbb6] bg-[#fffdf9] px-4 py-3 transition focus-within:border-[#b35332] focus-within:ring-3 focus-within:ring-[#b35332]/15"><LockKeyhole className="h-4 w-4 text-[#a65032]" /><input value={password} onChange={(event) => { setPassword(event.target.value); setError(""); }} type={showPassword ? "text" : "password"} autoComplete="current-password" placeholder="Tu contraseña" className="w-full bg-transparent text-sm outline-none placeholder:text-[#ad9581]" /><button type="button" onClick={() => setShowPassword((value) => !value)} className="rounded-md p-1 text-[#8a6d5a] hover:bg-[#f0e3d6]" aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}><Eye className={`h-4 w-4 ${showPassword ? "" : "opacity-60"}`} /></button></span></label>{error && <div role="alert" className="flex items-start gap-2 rounded-xl border border-[#edc7ba] bg-[#fdf0ea] px-3 py-3 text-xs leading-5 text-[#96472f]"><span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-[#b35332]" />{error}</div>}<button type="submit" className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#a65032] px-5 py-3.5 text-xs font-extrabold uppercase tracking-[0.13em] text-[#fff9ed] shadow-lg shadow-[#a65032]/20 transition hover:bg-[#8c3f27] active:scale-[0.98]">Entrar a administración <ArrowRight className="h-4 w-4" /></button></form><div className="relative mt-7 ml-4 flex items-start gap-3 border-t border-[#e6d5c3] pt-5 text-xs leading-5 text-[#806958]"><ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-[#5d895a]" /><p>Este acceso es para la gestión interna de la cafetería.</p></div></div><button onClick={() => navigate("/")} className="mt-6 flex items-center gap-2 text-xs font-extrabold uppercase tracking-[0.12em] text-[#efd4bf] transition hover:text-white"><ArrowLeft className="h-3.5 w-3.5" />Volver a la carta pública</button></section>
+    </div>
+  </div>;
+}
+
+function AdminMenu({ products, setProducts, navigate, onLogout }: { products: Product[]; setProducts: React.Dispatch<React.SetStateAction<Product[]>>; navigate: (path: string) => void; onLogout: () => void }) {
   const [query, setQuery] = useState("");
   const [editor, setEditor] = useState<Product | null>(null);
   const [deleting, setDeleting] = useState<Product | null>(null);
@@ -205,8 +238,8 @@ function AdminMenu({ products, setProducts, navigate }: { products: Product[]; s
     <aside className="flex shrink-0 flex-row items-center justify-between bg-[#211914] px-5 py-4 text-[#f9eddf] lg:sticky lg:top-0 lg:h-screen lg:w-[255px] lg:flex-col lg:items-stretch lg:justify-start lg:px-6 lg:py-7">
       <Logo light />
       <nav className="hidden space-y-2 lg:mt-14 lg:block"><NavItem icon={<CircleGauge />} label="Resumen" active /><NavItem icon={<Menu />} label="Productos" /><NavItem icon={<Settings2 />} label="Ajustes" muted /><div className="ml-3 mt-8 border-l border-[#a65032] pl-3 text-[9px] font-extrabold uppercase leading-5 tracking-[0.16em] text-[#c89a7e]">Tostado 47<br/>Carta viva</div></nav>
-      <div className="hidden rounded-2xl bg-[#30251f] p-4 lg:mt-auto lg:block"><p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-[#cb9d80]">Carta publicada</p><p className="mt-1 text-sm font-semibold">Los cambios se guardan aquí.</p><button onClick={() => navigate("/")} className="mt-4 flex items-center gap-2 text-xs font-extrabold uppercase tracking-[0.1em] text-[#e6a07c] hover:text-white"><Eye className="h-3.5 w-3.5" />Ver menú público</button></div>
-      <button onClick={() => navigate("/")} className="rounded-full border border-[#5b483b] p-2 text-[#f9eddf] lg:hidden" aria-label="Ver menú público"><Eye className="h-4 w-4" /></button>
+      <div className="hidden rounded-2xl bg-[#30251f] p-4 lg:mt-auto lg:block"><p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-[#cb9d80]">Carta publicada</p><p className="mt-1 text-sm font-semibold">Los cambios se guardan aquí.</p><button onClick={() => navigate("/")} className="mt-4 flex items-center gap-2 text-xs font-extrabold uppercase tracking-[0.1em] text-[#e6a07c] hover:text-white"><Eye className="h-3.5 w-3.5" />Ver menú público</button><button onClick={onLogout} className="mt-4 flex items-center gap-2 border-t border-[#5b483b] pt-4 text-xs font-extrabold uppercase tracking-[0.1em] text-[#d4b39b] hover:text-white"><LogOut className="h-3.5 w-3.5" />Cerrar sesión</button></div>
+      <div className="flex items-center gap-2 lg:hidden"><button onClick={onLogout} className="rounded-full border border-[#5b483b] p-2 text-[#f9eddf]" aria-label="Cerrar sesión"><LogOut className="h-4 w-4" /></button><button onClick={() => navigate("/")} className="rounded-full border border-[#5b483b] p-2 text-[#f9eddf]" aria-label="Ver menú público"><Eye className="h-4 w-4" /></button></div>
     </aside>
 
     <main className="min-w-0 flex-1 px-5 py-7 md:px-10 md:py-10">
@@ -243,7 +276,12 @@ function ConfirmDelete({ product, onCancel, onConfirm }: { product: Product; onC
 export default function Home() {
   const [location, navigate] = useLocation();
   const [products, setProducts] = useState<Product[]>(seedProducts);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   useEffect(() => { const stored = localStorage.getItem("cafe-nube-products"); if (!stored) return; try { const parsed = JSON.parse(stored) as Product[]; if (Array.isArray(parsed)) setProducts(parsed); } catch { localStorage.removeItem("cafe-nube-products"); } }, []);
+  useEffect(() => { setIsAuthenticated(localStorage.getItem(ADMIN_SESSION_KEY) === "active"); }, []);
   useEffect(() => { localStorage.setItem("cafe-nube-products", JSON.stringify(products)); }, [products]);
-  return location === "/admin" ? <AdminMenu products={products} setProducts={setProducts} navigate={navigate} /> : <PublicMenu products={products} navigate={navigate} />;
+  const logout = () => { localStorage.removeItem(ADMIN_SESSION_KEY); setIsAuthenticated(false); toast.success("Sesión cerrada. Hasta la próxima pausa."); navigate("/"); };
+  if (location === "/login") return isAuthenticated ? <AdminMenu products={products} setProducts={setProducts} navigate={navigate} onLogout={logout} /> : <AdminLogin navigate={navigate} onAuthenticated={() => setIsAuthenticated(true)} />;
+  if (location === "/admin") return isAuthenticated ? <AdminMenu products={products} setProducts={setProducts} navigate={navigate} onLogout={logout} /> : <AdminLogin navigate={navigate} onAuthenticated={() => setIsAuthenticated(true)} />;
+  return <PublicMenu products={products} navigate={navigate} />;
 }
