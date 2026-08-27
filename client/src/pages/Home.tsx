@@ -140,8 +140,8 @@ function PublicMenu({ products, navigate }: { products: Product[]; navigate: (pa
         </div>
       </section>
 
-      <main id="carta" className="relative mx-auto max-w-[1440px] px-5 py-16 md:px-10 md:py-24">
-        <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-end">
+      <main id="carta" className="relative mx-auto max-w-[1440px] px-5 py-8 md:px-10 md:py-24">
+        <div className="hidden flex-col justify-between gap-8 md:flex lg:flex-row lg:items-end">
           <div className="max-w-2xl lg:translate-x-8">
             <p className="steam-curve text-[10px] font-extrabold uppercase tracking-[0.22em] text-[#a65032]">La carta</p>
             <h2 className="mt-4 font-display text-5xl leading-[0.95] text-[#251b15] md:text-6xl">Preparado para <em className="font-normal text-[#a65032]">quedarse</em> un rato.</h2>
@@ -149,17 +149,17 @@ function PublicMenu({ products, navigate }: { products: Product[]; navigate: (pa
           <label className="flex h-12 w-full items-center gap-3 rounded-2xl border border-[#dfcdb9] bg-[#fffaf2] px-4 text-[#826b5a] lg:w-80 lg:-translate-y-4"><Search className="h-4 w-4" /><input value={query} onChange={(event) => setQuery(event.target.value)} aria-label="Buscar en la carta" placeholder="Busca una bebida o algo dulce" className="w-full bg-transparent text-sm outline-none placeholder:text-[#a68d7a]" /></label>
         </div>
 
-        <div className="mt-10 flex items-center gap-2 overflow-x-auto pb-1">
-          <Filter className="mr-1 h-4 w-4 shrink-0 text-[#a65032]" />
+        <div className="mt-2 flex items-center gap-2 overflow-x-auto pb-1 md:mt-10">
+          <Filter className="mr-1 hidden h-4 w-4 shrink-0 text-[#a65032] md:block" />
           {categories.map((category) => <button key={category} onClick={() => setActiveCategory(category)} className={`shrink-0 rounded-full px-4 py-2 text-xs font-extrabold uppercase tracking-[0.11em] transition ${activeCategory === category ? "bg-[#5d895a] text-[#fff9ed] shadow-lg shadow-[#5d895a]/20" : "bg-[#eee0cd] text-[#6d5647] hover:bg-[#e5d1ba]"}`}>{category}</button>)}
         </div>
 
-        <section className="relative mt-12 overflow-hidden border-y border-[#5e4131] bg-[#2a1c15] shadow-[0_24px_54px_rgba(54,30,16,0.2)]">
+        <section className="relative mt-5 overflow-hidden border-y border-[#5e4131] bg-[#2a1c15] shadow-[0_24px_54px_rgba(54,30,16,0.2)] md:mt-12">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_92%_0%,rgba(179,83,50,0.25),transparent_29%),linear-gradient(145deg,rgba(79,48,28,0.35),transparent_45%)]" />
           <span className="absolute bottom-0 left-8 top-0 w-px bg-[#c66b47] sm:left-[9.5rem]" />
           <div aria-hidden="true" className="absolute right-12 top-5 hidden h-28 w-48 opacity-70 md:block"><span className="absolute right-1 top-0 h-20 w-28 rounded-[100%_0_0_0] border-l border-t border-[#e19a78]/55" /><span className="absolute right-8 top-9 h-16 w-24 rounded-[100%_0_0_0] border-l border-t border-[#e19a78]/35" /><span className="absolute right-[4.5rem] top-[3.7rem] h-14 w-20 rounded-[100%_0_0_0] border-l border-t border-[#e19a78]/25" /></div>
           <div className="relative px-6 py-8 sm:px-10 sm:py-12 lg:px-16">
-            <div className="flex flex-col justify-between gap-5 border-b border-[#f4dfc8]/20 pb-6 sm:flex-row sm:items-end">
+            <div className="hidden flex-col justify-between gap-5 border-b border-[#f4dfc8]/20 pb-6 md:flex sm:flex-row sm:items-end">
               <div><p className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-[#e8a27d]">Selección de hoy · regla 02</p><h3 className="mt-2 font-display text-3xl text-[#fff8ed]">La carta, de arriba abajo.</h3></div>
               <p className="max-w-xs border-l border-[#c66b47]/65 pl-4 text-sm leading-6 text-[#d9c2af]">Precio, receta y características para decidir sin perder el hilo.</p>
             </div>

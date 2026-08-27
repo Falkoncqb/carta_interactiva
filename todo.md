@@ -31,3 +31,10 @@
 
 - [x] Reducir nuevamente la altura y el espacio vertical de la cabecera.
 - [x] Confirmar que título y botón conservan legibilidad.
+
+# Tareas — Controles de carta en móvil
+
+- [x] Ocultar el encabezado editorial de la carta en celular.
+- [x] Ocultar la barra de búsqueda en celular.
+- [x] Mantener visibles únicamente las pestañas de categorías antes del listado.
+- [x] Verificar la experiencia móvil simplificada.
