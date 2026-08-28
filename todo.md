@@ -38,3 +38,11 @@
 - [x] Ocultar la barra de búsqueda en celular.
 - [x] Mantener visibles únicamente las pestañas de categorías antes del listado.
 - [x] Verificar la experiencia móvil simplificada.
+
+# Tareas — Calificaciones y comentarios reales
+
+- [x] Diseñar el acceso “Califícanos” junto al hero público.
+- [x] Crear el formulario emergente con nombre, estrellas y comentario.
+- [x] Guardar y ordenar cronológicamente los comentarios enviados localmente.
+- [x] Mostrar un estado vacío honesto mientras no haya comentarios reales.
+- [x] Validar el flujo de envío y la visualización en la carta pública.

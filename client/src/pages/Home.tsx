@@ -2,10 +2,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { useLocation } from "wouter";
 import { toast } from "sonner";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import {
   ArrowLeft, ArrowRight, Check, ChevronRight, CircleGauge, Coffee, Cookie,
   CupSoda, Edit3, Eye, Filter, Leaf, Menu, MoreHorizontal, PackagePlus,
-  LockKeyhole, LogOut, Search, Settings2, ShieldCheck, Sparkles, Trash2, UserRound, X, Zap
+  LockKeyhole, LogOut, Search, Settings2, ShieldCheck, Sparkles, Star, Trash2, UserRound, X, Zap
 } from "lucide-react";
 
 type Category = "Café" | "Fríos" | "Matcha" | "Panadería";
@@ -19,6 +20,14 @@ type Product = {
   image?: string;
   available: boolean;
   featured?: boolean;
+};
+
+type Review = {
+  id: string;
+  name: string;
+  rating: number;
+  comment: string;
+  createdAt: string;
 };
 
 const asset = {
@@ -45,6 +54,7 @@ const seedProducts: Product[] = [
 const priceFormatter = new Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP", maximumFractionDigits: 0 });
 const newProduct = (): Product => ({ id: crypto.randomUUID(), name: "", category: "Café", price: 0, description: "", tags: [], available: true });
 const ADMIN_SESSION_KEY = "cafe-nube-admin-session";
+const REVIEW_STORAGE_KEY = "cafe-nube-public-reviews";
 
 function ProductGlyph({ category, className = "" }: { category: Category; className?: string }) {
   const Icon = category === "Panadería" ? Cookie : category === "Matcha" ? Leaf : category === "Fríos" ? CupSoda : Coffee;
@@ -110,9 +120,10 @@ function TextMenuRow({ product, index }: { product: Product; index: number }) {
   return <li className="group relative grid gap-4 border-b border-[#f4dfc8]/18 py-6 last:border-b-0 sm:grid-cols-[58px_1fr_auto] sm:gap-6 sm:py-7"><span className="font-display text-3xl leading-none text-[#c98664]">{String(index + 1).padStart(2, "0")}</span><div className="min-w-0"><div className="flex flex-wrap items-baseline justify-between gap-x-5 gap-y-2 sm:hidden"><h3 className="font-display text-2xl text-[#fff8ed]">{product.name}</h3><span className="font-display text-2xl text-[#e6a07c]">{priceFormatter.format(product.price)}</span></div><h3 className="hidden font-display text-3xl text-[#fff8ed] sm:block">{product.name}</h3><p className="mt-2 max-w-2xl text-sm leading-6 text-[#d9c2af]">{product.description}</p><div className="mt-4 flex flex-wrap gap-2">{product.tags.map((tag) => <span key={tag} className="rounded-full border border-[#f1d9c2]/20 bg-[#fff8ed]/8 px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-[0.11em] text-[#f3dfcd]">{tag}</span>)}</div></div><div className="hidden min-w-[110px] justify-end sm:flex"><span className="font-display text-3xl text-[#e6a07c] transition group-hover:-translate-y-0.5">{priceFormatter.format(product.price)}</span></div></li>;
 }
 
-function PublicMenu({ products, navigate }: { products: Product[]; navigate: (path: string) => void }) {
+function PublicMenu({ products, navigate, reviews, onAddReview }: { products: Product[]; navigate: (path: string) => void; reviews: Review[]; onAddReview: (review: Review) => void }) {
   const [activeCategory, setActiveCategory] = useState<Category | "Todo">("Todo");
   const [query, setQuery] = useState("");
+  const [reviewOpen, setReviewOpen] = useState(false);
   const menuProducts = useMemo(() => products.filter((p) => p.available && (activeCategory === "Todo" || p.category === activeCategory) && `${p.name} ${p.description} ${p.tags.join(" ")}`.toLowerCase().includes(query.toLowerCase())), [products, activeCategory, query]);
 
   return (
@@ -132,9 +143,9 @@ function PublicMenu({ products, navigate }: { products: Product[]; navigate: (pa
             <div className="mb-5 hidden items-center gap-3 text-[10px] font-extrabold uppercase tracking-[0.24em] text-[#e5c2a3] md:flex"><span className="h-px w-8 bg-[#c96b47]" />Café de especialidad · hoy</div>
             <h1 className="font-display text-balance text-[2.7rem] leading-[0.94] text-[#fff8ec] md:text-8xl">Elige tu pausa.<br className="hidden md:block"/><em className="hidden font-normal text-[#e7a080] md:inline">La servimos con carácter.</em></h1>
             <p className="mt-7 hidden max-w-md text-base leading-7 text-[#eadbcc] md:block">Café con origen, recetas de temporada y panadería recién salida del horno. Hecho para acompañar tu momento.</p>
-            <div className="mt-8 flex flex-wrap gap-3 md:mt-9">
+            <div className="mt-8 flex flex-col items-start gap-3 md:mt-9">
               <button onClick={() => document.getElementById("carta")?.scrollIntoView({ behavior: "smooth" })} className="inline-flex items-center gap-2 rounded-full bg-[#f5e8d8] px-5 py-3 text-xs font-extrabold uppercase tracking-[0.13em] text-[#2d2018] transition hover:bg-white active:scale-[0.97]">Descubrir la carta <span className="hidden md:inline"><ArrowDownLine /></span></button>
-              <span className="hidden items-center px-3 text-xs font-semibold text-[#f1d4c0] md:inline-flex">Abierto hoy · 08:00 — 19:30</span>
+              <div className="flex flex-wrap items-center gap-3"><button onClick={() => setReviewOpen(true)} className="inline-flex items-center gap-2 rounded-full border border-[#f0c46e]/65 bg-[#fff8ed]/8 px-4 py-2.5 text-[10px] font-extrabold uppercase tracking-[0.14em] text-[#ffe0a2] transition hover:bg-[#fff8ed] hover:text-[#34251b] active:scale-[0.97]"><Star className="h-3.5 w-3.5 fill-[#f4bc3d] text-[#f4bc3d]" />Califícanos</button><span className="hidden items-center px-3 text-xs font-semibold text-[#f1d4c0] md:inline-flex">Abierto hoy · 08:00 — 19:30</span></div>
             </div>
           </div>
         </div>
@@ -169,6 +180,8 @@ function PublicMenu({ products, navigate }: { products: Product[]; navigate: (pa
         {menuProducts.length === 0 && <div className="mt-10 rounded-[1.5rem] border border-dashed border-[#ceb69d] bg-[#fffaf2] px-6 py-14 text-center"><Search className="mx-auto h-7 w-7 text-[#a65032]" /><h3 className="mt-4 font-display text-2xl">No encontramos esa pausa.</h3><p className="mt-2 text-sm text-[#765f50]">Prueba con otra búsqueda o explora todas las categorías.</p><button onClick={() => { setQuery(""); setActiveCategory("Todo"); }} className="mt-5 text-xs font-extrabold uppercase tracking-[0.12em] text-[#a65032]">Ver carta completa</button></div>}
       </main>
 
+      <ReviewFeed reviews={reviews} />
+
       <section className="border-y border-[#ddc8b1] bg-[#ede0ce] paper-grain">
         <div className="mx-auto grid max-w-[1440px] gap-6 px-5 py-12 md:grid-cols-[1.15fr_0.85fr] md:px-10 md:py-16">
           <div><p className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-[#a65032]">Una guía pequeña</p><h2 className="mt-4 max-w-lg font-display text-4xl leading-tight text-[#281c15]">Aquí el menú se lee como se toma el café: <em className="font-normal">sin prisa.</em></h2></div>
@@ -178,8 +191,32 @@ function PublicMenu({ products, navigate }: { products: Product[]; navigate: (pa
 
       <footer className="bg-[#231a15] px-5 py-10 text-[#f3e5d5] md:px-10"><div className="mx-auto flex max-w-[1440px] flex-col justify-between gap-8 sm:flex-row sm:items-end"><Logo light /><div className="text-sm leading-6 text-[#c9aa91]"><p className="font-bold text-[#f3e5d5]">Café Nube · Plaza del Barrio</p><p>Abierto todos los días, 08:00 — 19:30</p></div><button onClick={() => navigate("/login")} className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-[0.14em] text-[#e7a080] hover:text-white">Gestionar carta <ChevronRight className="h-4 w-4" /></button></div></footer>
 
+      <ReviewDialog open={reviewOpen} onOpenChange={setReviewOpen} onSubmit={onAddReview} />
+
     </div>
   );
+}
+
+function ReviewDialog({ open, onOpenChange, onSubmit }: { open: boolean; onOpenChange: (open: boolean) => void; onSubmit: (review: Review) => void }) {
+  const [name, setName] = useState("");
+  const [rating, setRating] = useState(0);
+  const [comment, setComment] = useState("");
+  const [error, setError] = useState("");
+
+  const submit = (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!name.trim() || !rating || !comment.trim()) { setError("Completa tu nombre, calificación y comentario antes de enviarlo."); return; }
+    onSubmit({ id: crypto.randomUUID(), name: name.trim(), rating, comment: comment.trim(), createdAt: new Date().toISOString() });
+    setName(""); setRating(0); setComment(""); setError(""); onOpenChange(false);
+    toast.success("Gracias por dejar tu comentario.");
+  };
+
+  return <Dialog open={open} onOpenChange={onOpenChange}><DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto rounded-[1.5rem] border-[#ddc3ac] bg-[#fffaf2] p-0 text-[#2a1e16] shadow-[0_28px_80px_rgba(30,19,13,0.35)] sm:max-w-xl" showCloseButton={false}><div className="relative overflow-hidden p-6 sm:p-8"><span className="absolute bottom-0 left-7 top-0 w-px bg-[#b35332]" /><span className="absolute -right-7 -top-12 h-32 w-32 rounded-full border border-[#b35332]/20" /><div className="relative pl-4"><DialogHeader className="text-left"><p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-[#a65032]">Tu pausa cuenta</p><DialogTitle className="font-display text-4xl text-[#2a1e16]">Califícanos.</DialogTitle><DialogDescription className="max-w-sm leading-6 text-[#765e4e]">Cuéntanos cómo estuvo tu experiencia. Tu comentario se mostrará en la carta de este dispositivo.</DialogDescription></DialogHeader><form onSubmit={submit} className="mt-7 space-y-5"><label className="block"><span className="mb-2 block text-[10px] font-extrabold uppercase tracking-[0.12em] text-[#806758]">Nombre</span><input value={name} onChange={(event) => { setName(event.target.value); setError(""); }} maxLength={48} placeholder="¿Cómo te llamas?" className="form-input" /></label><fieldset><legend className="mb-2 block text-[10px] font-extrabold uppercase tracking-[0.12em] text-[#806758]">Tu calificación</legend><div className="flex gap-2" aria-label="Seleccionar una calificación de una a cinco estrellas">{[1, 2, 3, 4, 5].map((value) => <button key={value} type="button" onClick={() => { setRating(value); setError(""); }} className="rounded-lg p-1.5 transition hover:scale-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#b35332]" aria-label={`${value} ${value === 1 ? "estrella" : "estrellas"}`} aria-pressed={rating === value}><Star className={`h-7 w-7 transition ${value <= rating ? "fill-[#f4bc3d] text-[#f4bc3d]" : "text-[#e4bd69]"}`} /></button>)}</div></fieldset><label className="block"><span className="mb-2 block text-[10px] font-extrabold uppercase tracking-[0.12em] text-[#806758]">Comentario</span><textarea value={comment} onChange={(event) => { setComment(event.target.value); setError(""); }} maxLength={360} rows={4} placeholder="Escribe aquí lo que te gustaría compartir." className="form-input resize-none py-3" /><span className="mt-1 block text-right text-[10px] text-[#9a806e]">{comment.length}/360</span></label>{error && <p role="alert" className="border-l-2 border-[#b35332] bg-[#f8e8df] px-3 py-2 text-xs leading-5 text-[#94442c]">{error}</p>}<div className="flex flex-col-reverse gap-3 pt-1 sm:flex-row sm:justify-end"><button type="button" onClick={() => onOpenChange(false)} className="rounded-xl px-4 py-3 text-xs font-extrabold uppercase tracking-[0.11em] text-[#755c4a] hover:bg-[#f0e3d5]">Ahora no</button><button type="submit" className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#a65032] px-5 py-3 text-xs font-extrabold uppercase tracking-[0.11em] text-[#fff8ed] shadow-lg shadow-[#a65032]/20 transition hover:bg-[#8c3f27] active:scale-[0.97]">Dejar comentario <ArrowRight className="h-4 w-4" /></button></div></form></div></div></DialogContent></Dialog>;
+}
+
+function ReviewFeed({ reviews }: { reviews: Review[] }) {
+  const formatDate = (date: string) => new Intl.DateTimeFormat("es-CL", { day: "2-digit", month: "short" }).format(new Date(date));
+  return <section className="border-t border-[#e2cdb7] bg-[#f8f1e7] py-12 md:py-16"><div className="mx-auto max-w-[1440px] px-5 md:px-10"><div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end"><div><p className="steam-curve text-[10px] font-extrabold uppercase tracking-[0.2em] text-[#a65032]">Calificaciones</p><h2 className="mt-3 font-display text-4xl text-[#291d16]">Lo que se deja en la barra.</h2></div><p className="max-w-xs text-sm leading-6 text-[#765e4e]">Los comentarios se muestran en orden, desde el más reciente.</p></div>{reviews.length === 0 ? <div className="mt-7 border-l-2 border-[#b35332] bg-[#f1e4d4] px-5 py-4 text-sm leading-6 text-[#6e5545]"><strong className="font-display text-lg text-[#38251a]">Aún no hay comentarios publicados.</strong><br />Sé la primera persona en compartir cómo fue tu pausa.</div> : <div className="mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-3">{reviews.map((review) => <article key={review.id} className="w-[290px] shrink-0 snap-start border border-[#ddc7af] bg-[#fffaf2] p-5 shadow-[0_8px_24px_rgba(71,43,25,0.06)]"><div className="flex items-start justify-between gap-4"><p className="font-display text-2xl text-[#302118]">{review.name}</p><span className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#9b765f]">{formatDate(review.createdAt)}</span></div><div className="mt-3 flex gap-0.5" aria-label={`${review.rating} de 5 estrellas`}>{[1, 2, 3, 4, 5].map((value) => <Star key={value} className={`h-4 w-4 ${value <= review.rating ? "fill-[#f4bc3d] text-[#f4bc3d]" : "text-[#dfc695]"}`} />)}</div><p className="mt-4 text-sm leading-6 text-[#745c4c]">{review.comment}</p></article>)}</div>}</div></section>;
 }
 
 function ArrowDownLine() { return <span className="text-lg leading-none">↓</span>; }
@@ -286,12 +323,16 @@ function ConfirmDelete({ product, onCancel, onConfirm }: { product: Product; onC
 export default function Home() {
   const [location, navigate] = useLocation();
   const [products, setProducts] = useState<Product[]>(seedProducts);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   useEffect(() => { const stored = localStorage.getItem("cafe-nube-products"); if (!stored) return; try { const parsed = JSON.parse(stored) as Product[]; if (Array.isArray(parsed)) setProducts(parsed); } catch { localStorage.removeItem("cafe-nube-products"); } }, []);
+  useEffect(() => { const stored = localStorage.getItem(REVIEW_STORAGE_KEY); if (!stored) return; try { const parsed = JSON.parse(stored) as Review[]; if (Array.isArray(parsed)) setReviews(parsed.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())); } catch { localStorage.removeItem(REVIEW_STORAGE_KEY); } }, []);
   useEffect(() => { setIsAuthenticated(localStorage.getItem(ADMIN_SESSION_KEY) === "active"); }, []);
   useEffect(() => { localStorage.setItem("cafe-nube-products", JSON.stringify(products)); }, [products]);
+  useEffect(() => { localStorage.setItem(REVIEW_STORAGE_KEY, JSON.stringify(reviews)); }, [reviews]);
   const logout = () => { localStorage.removeItem(ADMIN_SESSION_KEY); setIsAuthenticated(false); toast.success("Sesión cerrada. Hasta la próxima pausa."); navigate("/"); };
+  const addReview = (review: Review) => setReviews((current) => [review, ...current].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
   if (location === "/login") return isAuthenticated ? <AdminMenu products={products} setProducts={setProducts} navigate={navigate} onLogout={logout} /> : <AdminLogin navigate={navigate} onAuthenticated={() => setIsAuthenticated(true)} />;
   if (location === "/admin") return isAuthenticated ? <AdminMenu products={products} setProducts={setProducts} navigate={navigate} onLogout={logout} /> : <AdminLogin navigate={navigate} onAuthenticated={() => setIsAuthenticated(true)} />;
-  return <PublicMenu products={products} navigate={navigate} />;
+  return <PublicMenu products={products} navigate={navigate} reviews={reviews} onAddReview={addReview} />;
 }

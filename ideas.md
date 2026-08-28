@@ -75,3 +75,4 @@ Un **arco de vapor angular** que, en negativo, sugiere simultáneamente una nube
 - Cada estado de acceso, vacío o error utiliza el mismo sistema editorial: papel marfil, texto espresso, acción en Tostado 47 y una voz concreta, cálida y precisa.
 - El símbolo de vapor/nube/taza y la regla vertical de tostado reaparecen en accesos, encabezados, separadores y controles activos para que la identidad no dependa solo del logotipo.
 - En la carta pública, las categorías siempre revelan una única lista vertical de solo texto: numeración, nombre, precio, descripción y etiquetas de características. Las imágenes quedan fuera del bloque de productos para privilegiar lectura y velocidad de decisión en escritorio y móvil.
+- Las calificaciones se abren en un diálogo editorial dentro de la misma página y los comentarios publicados son solo los enviados por visitantes reales. Sin comentarios reales, la página utiliza un estado vacío honesto y no simula testimonios.
