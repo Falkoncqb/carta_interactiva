@@ -1,4 +1,4 @@
-Café Nube — Menú interactivo para cafetería
+Café Nube — Menú interactivo para cafetería DOMINIO DE DEMOSTRACION https://cafenube-28w7ka43.manus.space/login
 
 Café Nube es una aplicación web frontend para presentar la carta digital de una cafetería y administrar sus productos desde una interfaz privada. El proyecto combina una experiencia pública orientada al cliente con un panel operativo para actualizar nombres, categorías, precios, descripciones, características y disponibilidad.
 
